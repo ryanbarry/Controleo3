@@ -254,7 +254,8 @@ redraw:
               drawTouchButton(60, 230, 160, 99, BUTTON_LARGE_FONT, (char *) "Delete");
               drawTouchButton(260, 230, 160, 105, BUTTON_LARGE_FONT, (char *) "Cancel");
               if (getTap(SHOW_TEMPERATURE_IN_HEADER) == 0) {
-                deleteProfile(prefs.selectedProfile);
+                //TODO: do something? print out to usb serial? i dunno...
+                //deleteProfile(prefs.selectedProfile);
                 prefs.selectedProfile = 0;
               }
               tft.fillRect(0, 90, 480, 230, WHITE);
@@ -575,9 +576,9 @@ redraw:
         displayString(10, 100, FONT_9PT_BLACK_ON_WHITE, (char *) "Serial Number:");
         sprintf(buffer100Bytes, "%lX", *((uint32_t *) 0x0080A00C));
         displayString(192, 100, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);
-        displayString(10, 130, FONT_9PT_BLACK_ON_WHITE, (char *) "Flash ID:");
-        sprintf(buffer100Bytes, "%lX", flash.readUniqueID());
-        displayString(118, 130, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);
+        //displayString(10, 130, FONT_9PT_BLACK_ON_WHITE, (char *) "Flash ID:");
+        //sprintf(buffer100Bytes, "%lX", flash.readUniqueID());
+        //displayString(118, 130, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);
         displayString(10, 160, FONT_9PT_BLACK_ON_WHITE, (char *) "LCD Version:");
         sprintf(buffer100Bytes, "%lX", tft.getLCDVersion());
         displayString(169, 160, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);

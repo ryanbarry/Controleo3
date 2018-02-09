@@ -161,7 +161,7 @@ restart:
     drawTouchButton(130, 180, 220, 82, BUTTON_LARGE_FONT, (char *) "Done");
     
     // Save the touch calibration settings immediately
-    writePrefsToFlash();
+    //writePrefsToFlash();
     
     // Debounce touch
     calibrationDebounce();
@@ -354,7 +354,8 @@ int8_t getTap(uint8_t mode)
   // Repeat until valid tap (or just once if mode is CHECK_FOR_TAP_THEN_EXIT)
   while (1) {
     // See if prefs should be written to flash.  The write is time-delayed to reduce flash write cycles
-    checkIfPrefsShouldBeWrittenToFlash();
+    //TODO: replace this?
+    //checkIfPrefsShouldBeWrittenToFlash();
 
     // Poll for valid tap reading
     if (!touch.read(&x, &y))  {

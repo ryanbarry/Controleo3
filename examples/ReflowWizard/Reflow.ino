@@ -58,8 +58,9 @@ void reflow(uint8_t profileNo)
   maxBias = 100;
 
   // Set up the flash reads to start with the first block of this profile
-  if (getNextTokenFromFlash(0, &prefs.profile[profileNo].startBlock) == TOKEN_END_OF_PROFILE)
-    return;
+  //TODO: get tokens from somewhere other than flash
+  //if (getNextTokenFromFlash(0, &prefs.profile[profileNo].startBlock) == TOKEN_END_OF_PROFILE)
+  //  return;
 
   // Set up the screen in preparation for reflow
   // Erase the bottom part of the screen
@@ -185,7 +186,8 @@ userChangedMindAboutAborting:
     switch (reflowPhase) {
       case REFLOW_PHASE_NEXT_COMMAND:
         // Get the next token from flash, and act on it
-        token = getNextTokenFromFlash(buffer100Bytes, numbers);
+        //TODO: read tokens from somewhere other than flash
+        //token = getNextTokenFromFlash(buffer100Bytes, numbers);
 
         if (token != TOKEN_DISPLAY)
           SerialUSB.println(tokenToText(buffer100Bytes, token, numbers));

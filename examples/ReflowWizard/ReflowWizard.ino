@@ -9,11 +9,10 @@
 
 // Global temporary buffers (used everywhere)
 char buffer100Bytes[100];
-uint8_t flashBuffer256Bytes[256];     // Read/write from flash.  This is the size of a flash block
+//uint8_t flashBuffer256Bytes[256];     // Read/write from flash.  This is the size of a flash block
 
 Controleo3LCD tft;
 Controleo3Touch  touch;
-Controleo3Flash  flash;
 Controleo3MAX31856 thermocouple;
 
 
@@ -21,13 +20,11 @@ void setup(void) {
   // First priority - turn off the relays!
   initOutputs();
 
-  flash.begin();
   getPrefs();
   factoryReset(false);
 
   // Get the splash screen up as quickly as possible
   tft.begin();
-  //flash.begin();
 
   // Display the initial splash screen
   tft.pokeRegister(ILI9488_DISPLAYOFF);
@@ -40,7 +37,7 @@ void setup(void) {
   playTones(TUNE_STARTUP);
   SerialUSB.begin(115200);
 
-  // Get the prefs from external flash
+  // Get the prefs from external ~flash~ somewhere
   getPrefs();
 
   // Initialize the MAX31856's registers

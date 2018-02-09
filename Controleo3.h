@@ -13,12 +13,10 @@
 
 #include "Arduino.h"
 
-// Include all the code for the display, touch, thermocouple, flash and the SD card
+// Include all the code for the display, touch, and thermocouple
 #include "Controleo3MAX31856.h"
 #include "Controleo3LCD.h"
 #include "Controleo3Touch.h"
-#include "Controleo3Flash.h"
-
 
 #define LCD_WIDTH  		480
 #define LCD_HEIGHT 		320

@@ -33,11 +33,13 @@ uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16
     }
 
     // Get the flash page where this bitmap is stored 
+    /*TODO: something something not using flash
     pageWhereBitmapIsStored = flash.getBitmapInfo(bitmapNumber, &bitmapWidth, &bitmapHeight);
     if (pageWhereBitmapIsStored > 0xFFF) {
       SerialUSB.println("RenderBitmap: pageWhereBitmapIsStored is too big");
       return 0;
     }
+    */
 
     if (0 && bitmapNumber >= BITMAP_LEFT_ARROW)
       SerialUSB.println("N=" + String(bitmapNumber) + " H=" + String(bitmapHeight) + " W=" + String(bitmapWidth) + " Center=" + String((480 - bitmapWidth) >> 1));
@@ -48,8 +50,9 @@ uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16
     // How many pixels are in the first flash page? (pixels are 2 bytes)
     pixelsInPage = bitmapPixels > 128? 128 : bitmapPixels;
 
-    // Start the flash read.  
-    flash.startRead(pageWhereBitmapIsStored, pixelsInPage << 1, (uint8_t *) buf);
+    // Start the flash read.
+    //TODO: not flash
+    //flash.startRead(pageWhereBitmapIsStored, pixelsInPage << 1, (uint8_t *) buf);
 
     // Start rendering the bitmap
     tft.startBitmap(x, y, bitmapWidth, bitmapHeight);
@@ -60,11 +63,13 @@ uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16
        // Read the next page of the bitmap
        if (bitmapPixels) {
           pixelsInPage = bitmapPixels > 128? 128 : bitmapPixels;
-          flash.continueRead(pixelsInPage << 1, (uint8_t *) buf);
+          //TODO: not flash
+          //flash.continueRead(pixelsInPage << 1, (uint8_t *) buf);
        }
     }
     tft.endBitmap();
-    flash.endRead();
+    //TODO: not flash
+    //flash.endRead();
     return bitmapWidth;
 }
 
