@@ -56,7 +56,7 @@ userChangedMindAboutAborting:
 
   // Display baking information to the screen and for debugging
   displayBakeTemperatureAndDuration(true);
-  SerialUSB.println(buffer100Bytes);
+  //SerialUSB.println(buffer100Bytes);
 
   // Display the bake phase on the screen
   displayBakePhase(bakePhase, abortDialogIsOnScreen);
@@ -142,8 +142,8 @@ userChangedMindAboutAborting:
       }
     
       // Abort the bake
-      SerialUSB.println("Thermocouple error:" + String(buffer100Bytes));
-      SerialUSB.println("Bake aborted because of thermocouple error!");
+      //SerialUSB.println("Thermocouple error:" + String(buffer100Bytes));
+      //SerialUSB.println("Bake aborted because of thermocouple error!");
       // Show the error on the screen
       drawThickRectangle(0, 90, 480, 230, 15, RED);
       tft.fillRect(15, 105, 450, 100, WHITE);
@@ -167,7 +167,7 @@ userChangedMindAboutAborting:
           displayBakePhase(bakePhase, abortDialogIsOnScreen);
           // Reduce the duty cycle for the last 15 degrees
           bakeDutyCycle = bakeDutyCycle / 3;
-          SerialUSB.println("Move to bake phase");
+          //SerialUSB.println("Move to bake phase");
         }
         break;
        
@@ -203,7 +203,7 @@ userChangedMindAboutAborting:
 
             // Reset the bake integral, so it will be slow to increase the duty cycle again
             bakeIntegral = 0;
-            SerialUSB.println("Over-temp. Elements off");
+            //SerialUSB.println("Over-temp. Elements off");
           }
           // No more to do here
           break;
@@ -222,7 +222,7 @@ userChangedMindAboutAborting:
           // Increase duty cycles
           if (bakeDutyCycle < 100)
             bakeDutyCycle++;
-          SerialUSB.println("Under-temp. Increasing duty cycle");
+          //SerialUSB.println("Under-temp. Increasing duty cycle");
         }
         break;
 
@@ -269,7 +269,7 @@ userChangedMindAboutAborting:
         break;
 
       case BAKING_PHASE_ABORT:
-        SerialUSB.println("Bake is over!");
+        //SerialUSB.println("Bake is over!");
         // Turn all elements and fans off
         setOvenOutputs(ELEMENTS_OFF, CONVECTION_FAN_OFF, COOLING_FAN_OFF);
         // Return to the main menu
@@ -321,8 +321,8 @@ userChangedMindAboutAborting:
 void DisplayBakeTime(uint16_t duration, float temperature, int duty, int integral) {
   // Write the time and temperature to the serial port, for graphing or analysis on a PC
   uint16_t fraction = ((uint16_t) (temperature * 100)) % 100;
-  sprintf(buffer100Bytes, "%u, %d.%02d, %i, %i", duration, (uint16_t) temperature, fraction, duty, integral);
-  SerialUSB.println(buffer100Bytes);
+  //sprintf(buffer100Bytes, "%u, %d.%02d, %i, %i", duration, (uint16_t) temperature, fraction, duty, integral);
+  //SerialUSB.println(buffer100Bytes);
 }
 
 
@@ -339,7 +339,7 @@ void displayBakePhase(uint8_t phase, boolean abortDialogIsOnScreen)
   lastLen = displayString(bakePhaseStrPosition[phase], 175, FONT_9PT_BLACK_ON_WHITE, (char *) bakePhaseStr[phase]);
   lastMsgX = bakePhaseStrPosition[phase];
   // Dump this out the debugging port too
-  SerialUSB.println("Baking phase = " + String(bakePhaseStr[phase]));
+  //SerialUSB.println("Baking phase = " + String(bakePhaseStr[phase]));
 }
 
 

@@ -50,7 +50,7 @@ void setup(void) {
   tft.pokeRegister(ILI9488_DISPLAYON);
 #endif
   playTones(TUNE_STARTUP);
-  SerialUSB.begin(115200);
+  //SerialUSB.begin(115200);
 
   // Get the prefs from external ~flash~ somewhere
   getPrefs();
@@ -110,8 +110,8 @@ void checkFreeMemory()
     return;
 
   // There has been a memory leak!
-  sprintf(buffer100Bytes, "Free RAM was %ld and is now %ld", freeRAMOnBoot, getFreeRAM());
-  SerialUSB.println(buffer100Bytes);
+  //sprintf(buffer100Bytes, "Free RAM was %ld and is now %ld", freeRAMOnBoot, getFreeRAM());
+  //SerialUSB.println(buffer100Bytes);
 //  drawThickRectangle(80, 70, 320, 135, 10, RED);
 //  displayString(114, 100, FONT_12PT_BLACK_ON_WHITE, (char *) "Memory Leak!!!");
 //  sprintf(buffer100Bytes, "%d bytes lost", freeRAMOnBoot - getFreeRAM());

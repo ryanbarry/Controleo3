@@ -165,8 +165,8 @@ userChangedMindAboutAborting:
       }
     
       // Abort the reflow
-      SerialUSB.println("Thermocouple error:" + String(buffer100Bytes));
-      SerialUSB.println("Reflow aborted because of thermocouple error!");
+      //SerialUSB.println("Thermocouple error:" + String(buffer100Bytes));
+      //SerialUSB.println("Reflow aborted because of thermocouple error!");
       showReflowError(iconsX, (char *) "Thermocouple error:", buffer100Bytes);
       reflowPhase = REFLOW_ABORT;
     }
@@ -174,7 +174,7 @@ userChangedMindAboutAborting:
     // Was the maximum temperature exceeded?
     if (currentTemperature > maxTemperature) {
       // Abort the reflow
-      SerialUSB.println("Reflow aborted because of maximum temperature exceeded!");
+      //SerialUSB.println("Reflow aborted because of maximum temperature exceeded!");
       sprintf(buffer100Bytes, "Maximum temperature of %d~C", maxTemperature);
       showReflowError(iconsX, buffer100Bytes, (char *) "was exceeded.");
       reflowPhase = REFLOW_ABORT;      
@@ -187,7 +187,7 @@ userChangedMindAboutAborting:
         //token = getNextTokenFromFlash(buffer100Bytes, numbers);
 
         if (token != TOKEN_DISPLAY)
-          SerialUSB.println(tokenToText(buffer100Bytes, token, numbers));
+          //SerialUSB.println(tokenToText(buffer100Bytes, token, numbers));
 
         switch (token) {
           case TOKEN_DISPLAY:
@@ -278,7 +278,7 @@ userChangedMindAboutAborting:
             // Keep the oven in this state for a number of seconds
             // PID shouldn't be on now. TOKEN_ELEMENT_DUTY_CYCLES should've been specified
             if (isPID) {
-              SerialUSB.println("ERROR: Must specify \"element duty cycle\" before \"wait for\"!");
+              //SerialUSB.println("ERROR: Must specify \"element duty cycle\" before \"wait for\"!");
               isPID = false;
               // Assume elements should be off
               currentDuty[TYPE_BOTTOM_ELEMENT] = 0;
@@ -294,7 +294,7 @@ userChangedMindAboutAborting:
             // Wait until the oven temperature is above a certain temperature
             // PID shouldn't be on now. TOKEN_ELEMENT_DUTY_CYCLES should've been specified
             if (isPID) {
-              SerialUSB.println("ERROR: Must specify \"element duty cycle\" before \"wait until above\"!");
+              //SerialUSB.println("ERROR: Must specify \"element duty cycle\" before \"wait until above\"!");
               isPID = false;
               // Assume elements should be off
               currentDuty[TYPE_BOTTOM_ELEMENT] = 0;
@@ -304,7 +304,7 @@ userChangedMindAboutAborting:
             desiredTemperature = numbers[0];
             if (desiredTemperature >= maxTemperature) {
               // This is a problem because the reflow will abort as soon as this temperature is reached
-              SerialUSB.println("ERROR: wait-until-temp higher than maximum temperature!");
+              //SerialUSB.println("ERROR: wait-until-temp higher than maximum temperature!");
               desiredTemperature = maxTemperature;
             }
             reflowPhase = REFLOW_WAITING_UNTIL_ABOVE;            
@@ -314,7 +314,7 @@ userChangedMindAboutAborting:
           case TOKEN_WAIT_UNTIL_BELOW_C:
             // PID shouldn't be on now. TOKEN_ELEMENT_DUTY_CYCLES should've been specified
             if (isPID) {
-              SerialUSB.println("ERROR: Must specify \"element duty cycle\" before \"wait until below\"!");
+              //SerialUSB.println("ERROR: Must specify \"element duty cycle\" before \"wait until below\"!");
               isPID = false;
               // Assume elements should be off
               currentDuty[TYPE_BOTTOM_ELEMENT] = 0;
@@ -325,7 +325,7 @@ userChangedMindAboutAborting:
             desiredTemperature = numbers[0];
             if (desiredTemperature < 25) {
               // This is a problem because the temperature is below room temperature
-              SerialUSB.println("ERROR: wait-until-temp lower than room temperature!");
+              //SerialUSB.println("ERROR: wait-until-temp lower than room temperature!");
               desiredTemperature = 25;
             }
             reflowPhase = REFLOW_WAITING_UNTIL_BELOW;            
@@ -416,7 +416,7 @@ userChangedMindAboutAborting:
         updateStatusMessage(token, countdownTimer, 0);
         // We were waiting for a certain period of time.  Have we waited long enough?
         if (countdownTimer == 0) {
-          SerialUSB.println("Finished waiting");
+          //SerialUSB.println("Finished waiting");
           // Erase the status
           updateStatusMessage(NOT_A_TOKEN, 0, 0);
           // Get the next command
@@ -431,7 +431,7 @@ userChangedMindAboutAborting:
 
         // We were waiting for the oven temperature to rise above a certain point
         if (currentTemperature >= desiredTemperature) {
-          SerialUSB.println("Heated to desired temperature");
+          //SerialUSB.println("Heated to desired temperature");
           // Erase the status
           updateStatusMessage(NOT_A_TOKEN, 0, 0);
           // Get the next command
@@ -446,7 +446,7 @@ userChangedMindAboutAborting:
 
         // We were waiting for the oven temperature to drop below a certain point
         if (currentTemperature <= desiredTemperature) {
-          SerialUSB.println("Cooled to desired temperature");
+          //SerialUSB.println("Cooled to desired temperature");
           // Erase the status
           updateStatusMessage(NOT_A_TOKEN, 0, 0);
           // Get the next command
@@ -461,7 +461,7 @@ userChangedMindAboutAborting:
 
         // We were waiting for a certain period of time.  Have we waited long enough?
         if (countdownTimer == 0) {
-          SerialUSB.println("Finished maintaining temperature");
+          //SerialUSB.println("Finished maintaining temperature");
           // Erase the status
           updateStatusMessage(NOT_A_TOKEN, 0, 0);
           // Get the next command
@@ -505,7 +505,7 @@ userChangedMindAboutAborting:
       
         // Abort if deviated too far from the required temperature
         if (reflowPhase != REFLOW_MAINTAIN_TEMP && abs(pidTemperature - currentTemperature) > maxTemperatureDeviation) {
-          SerialUSB.println("ERROR: temperature delta exceeds maximum allowed!");
+          //SerialUSB.println("ERROR: temperature delta exceeds maximum allowed!");
           sprintf(buffer100Bytes, "Maximum deviation of %d~C was", maxTemperatureDeviation);
           showReflowError(iconsX, buffer100Bytes, (char *) "exceeded");
           reflowPhase = REFLOW_ALL_DONE;
@@ -534,7 +534,7 @@ userChangedMindAboutAborting:
         //   elements take a very long time to heat up and cool down so this will be a much higher value.
         Kd = map(constrain(prefs.learnedInertia[TYPE_WHOLE_OVEN], 30, 80), 30, 80, 30, 60);
         // Dump these values out over USB for debugging
-        SerialUSB.println("T="+String(currentTemperature)+" P="+String(pidTemperature)+" D="+String(pidTemperatureDelta)+" E="+String(thisError)+" I="+String(pidIntegral)+" D="+String(pidDerivative)+" Kd="+String(Kd));
+        //SerialUSB.println("T="+String(currentTemperature)+" P="+String(pidTemperature)+" D="+String(pidTemperatureDelta)+" E="+String(thisError)+" I="+String(pidIntegral)+" D="+String(pidDerivative)+" Kd="+String(Kd));
 
         // If we're over-temperature, it is best to slow things down even more since taking a bit longer in a phase is better than taking less time
         if (thisError < 0)
@@ -548,7 +548,7 @@ userChangedMindAboutAborting:
         thisError = constrain(thisError, -30, 30);
         
         // Add the base power and the PID delta
-        SerialUSB.println("Power was " + String(pidPower) + " and is now " + String(pidPower + thisError));
+        //SerialUSB.println("Power was " + String(pidPower) + " and is now " + String(pidPower + thisError));
         pidPower += (thisError);
 
         // Make sure the resulting power is reasonable
@@ -766,7 +766,7 @@ uint16_t getBasePIDPower(double temperature, double increment, uint16_t *bias, u
   biasFactor = (float) 2 * maxBias / (bias[TYPE_BOTTOM_ELEMENT] + bias[TYPE_TOP_ELEMENT]);
 
   totalBasePower = basePower + insulationPower + risePower;
-  SerialUSB.println("Base PID power at "+String(temperature)+"C:  B="+String(basePower)+" I="+String(insulationPower)+" R="+String(risePower)+" Total="+String(totalBasePower)+" bias="+String(biasFactor));
+  //SerialUSB.println("Base PID power at "+String(temperature)+"C:  B="+String(basePower)+" I="+String(insulationPower)+" R="+String(risePower)+" Total="+String(totalBasePower)+" bias="+String(biasFactor));
 
   // Put it all together
   totalBasePower = totalBasePower * biasFactor;

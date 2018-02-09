@@ -165,8 +165,8 @@ userChangedMindAboutAborting:
       }
     
       // Abort the bake
-      SerialUSB.println("Thermocouple error:" + String(buffer100Bytes));
-      SerialUSB.println("Learning aborted because of thermocouple error!");
+      //SerialUSB.println("Thermocouple error:" + String(buffer100Bytes));
+      //SerialUSB.println("Learning aborted because of thermocouple error!");
       // Show the error on the screen
       drawThickRectangle(0, 90, 480, 230, 15, RED);
       tft.fillRect(30, 105, 420, 115, WHITE);
@@ -205,7 +205,7 @@ userChangedMindAboutAborting:
           learningDutyCycle = 30;
         if (i < 20) {
           learningPhase = LEARNING_PHASE_CONSTANT_TEMP;
-          SerialUSB.println("learningPhase -> LEARNING_PHASE_CONSTANT_TEMP");
+          //SerialUSB.println("learningPhase -> LEARNING_PHASE_CONSTANT_TEMP");
           learningDutyCycle = 15;
           secondsIntoPhase = 0;
         }
@@ -267,7 +267,7 @@ userChangedMindAboutAborting:
 
             // Reset the bake integral, so it will be slow to increase the duty cycle again
             learningIntegral = 0;
-            SerialUSB.println("Over-temp. Elements off");
+            //SerialUSB.println("Over-temp. Elements off");
           }
         }
         else {
@@ -286,7 +286,7 @@ userChangedMindAboutAborting:
             // Increase duty cycles
             if (learningDutyCycle < 100)
               learningDutyCycle++;
-              SerialUSB.println("Under-temp. Increasing duty cycle");
+            //SerialUSB.println("Under-temp. Increasing duty cycle");
           }
         }
         
@@ -454,7 +454,7 @@ userChangedMindAboutAborting:
 
           // Reset the bake integral, so it will be slow to increase the duty cycle again
           learningIntegral = 0;
-          SerialUSB.println("Over-temp. Elements off");
+          //SerialUSB.println("Over-temp. Elements off");
         }
 
         // Is the oven below temperature?
@@ -472,7 +472,7 @@ userChangedMindAboutAborting:
             // Increase duty cycles
             if (learningDutyCycle < 100)
               learningDutyCycle++;
-            SerialUSB.println("Under-temp. Increasing duty cycle");
+            //SerialUSB.println("Under-temp. Increasing duty cycle");
           } 
         }
         break;
@@ -518,7 +518,7 @@ userChangedMindAboutAborting:
         break;
 
       case LEARNING_PHASE_ABORT:
-        SerialUSB.println("Learning is over!");
+        //SerialUSB.println("Learning is over!");
         // Turn all elements and fans off
         setOvenOutputs(ELEMENTS_OFF, CONVECTION_FAN_OFF, COOLING_FAN_OFF);
         // Return to the main menu
@@ -570,8 +570,8 @@ userChangedMindAboutAborting:
 void DisplayLearningTime(uint16_t duration, float temperature, int duty, int integral) {
   // Write the time and temperature to the serial port, for graphing or analysis on a PC
   uint16_t fraction = ((uint16_t) (temperature * 100)) % 100;
-  sprintf(buffer100Bytes, "%u, %d.%02d, %i, %i", duration, (uint16_t) temperature, fraction, duty, integral);
-  SerialUSB.println(buffer100Bytes);
+  //sprintf(buffer100Bytes, "%u, %d.%02d, %i, %i", duration, (uint16_t) temperature, fraction, duty, integral);
+  //SerialUSB.println(buffer100Bytes);
 }
 
 

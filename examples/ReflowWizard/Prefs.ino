@@ -20,7 +20,7 @@ void getPrefs()
   // Sanity check on the size of the prefences
   if (sizeof(prefs) > 4096)
   {
-    SerialUSB.println("Prefs size must not exceed 4Kb!!!!!!!!");
+    //SerialUSB.println("Prefs size must not exceed 4Kb!!!!!!!!");
     // Hopefully getting a massive delay while developing new code alert you to this situation 
     delay(10000);
   }
@@ -43,7 +43,7 @@ void getPrefs()
     prefs.lastUsedProfileBlock = FIRST_PROFILE_BLOCK;
   }
 
-  SerialUSB.println("Read prefs from block " + String(prefsToUse) + ". Seq No = " + String(prefs.sequenceNumber));
+  //SerialUSB.println("Read prefs from block " + String(prefsToUse) + ". Seq No = " + String(prefs.sequenceNumber));
 
 /* Defaults for oven in build guide
   prefs.learningComplete = true;

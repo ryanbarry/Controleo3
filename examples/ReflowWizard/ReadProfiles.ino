@@ -148,7 +148,7 @@ void sortProfiles(void)
         continue;
       // If the first profile is not valid then switch them
       if (prefs.profile[i].startBlock == 0) {
-        SerialUSB.println("Moving " + String(prefs.profile[j].name) + " (" + String(j) + ") to " + String(i));
+        //SerialUSB.println("Moving " + String(prefs.profile[j].name) + " (" + String(j) + ") to " + String(i));
         // Copy one block to the other
         memcpy(&prefs.profile[i], &prefs.profile[j], sizeof(struct profiles));
         // Zero out the old profile
@@ -159,13 +159,13 @@ void sortProfiles(void)
       if (strcmp(prefs.profile[i].name, prefs.profile[j].name) <= 0)
         continue;
       // Swap the profiles
-      SerialUSB.println("Swapping " + String(prefs.profile[i].name) + " (" + String(i) + " and " + String(j) + ")");
+      //SerialUSB.println("Swapping " + String(prefs.profile[i].name) + " (" + String(i) + " and " + String(j) + ")");
       memcpy(&temp, &prefs.profile[i], sizeof(struct profiles));
       memcpy(&prefs.profile[i], &prefs.profile[j], sizeof(struct profiles));
       memcpy(&prefs.profile[j], &temp, sizeof(struct profiles));
     }
   }
-  SerialUSB.println("Profiles have been sorted");
+  //SerialUSB.println("Profiles have been sorted");
   prefs.numProfiles = getNumberOfProfiles();
 }
 

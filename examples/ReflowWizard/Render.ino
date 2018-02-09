@@ -29,7 +29,7 @@ uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16
 
     // Make sure this is a valid bitmap
     if (bitmapNumber > BITMAP_LAST_ONE) {
-      SerialUSB.println("RenderBitmap: bitmap number if not valid");
+      //SerialUSB.println("RenderBitmap: bitmap number if not valid");
       return 0;
     }
 
@@ -37,13 +37,13 @@ uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16
     /*TODO: something something not using flash
     pageWhereBitmapIsStored = flash.getBitmapInfo(bitmapNumber, &bitmapWidth, &bitmapHeight);
     if (pageWhereBitmapIsStored > 0xFFF) {
-      SerialUSB.println("RenderBitmap: pageWhereBitmapIsStored is too big");
+      //SerialUSB.println("RenderBitmap: pageWhereBitmapIsStored is too big");
       return 0;
     }
     */
 
     if (0 && bitmapNumber >= BITMAP_LEFT_ARROW)
-      SerialUSB.println("N=" + String(bitmapNumber) + " H=" + String(bitmapHeight) + " W=" + String(bitmapWidth) + " Center=" + String((480 - bitmapWidth) >> 1));
+      //SerialUSB.println("N=" + String(bitmapNumber) + " H=" + String(bitmapHeight) + " W=" + String(bitmapWidth) + " Center=" + String((480 - bitmapWidth) >> 1));
 
     // Calculate the number of pixels that need to be rendered
     bitmapPixels = bitmapWidth * bitmapHeight;
@@ -83,9 +83,9 @@ uint16_t displayString(uint16_t x, uint16_t y, uint8_t font, char *str) {
   if (true /* strstr(str, "~") > 0 || strstr(str, ":") > 0 */)
     printData = false;
   else {
-    SerialUSB.print("Width of [");
-    SerialUSB.print(str);
-    SerialUSB.print("] is ");
+    //SerialUSB.print("Width of [");
+    //SerialUSB.print(str);
+    //SerialUSB.print("] is ");
   }
   while (*str != 0) {
     if (!firstChar)
@@ -95,9 +95,9 @@ uint16_t displayString(uint16_t x, uint16_t y, uint8_t font, char *str) {
     x += postCharacterSpace(font, *str++);
   }
   if (printData) {
-    SerialUSB.print(x - start - postCharacterSpace(font, *(str-1)));
-    SerialUSB.print(". Center = ");
-    SerialUSB.println((480 - x + start + postCharacterSpace(font, *(str-1))) / 2);
+    //SerialUSB.print(x - start - postCharacterSpace(font, *(str-1)));
+    //SerialUSB.print(". Center = ");
+    //SerialUSB.println((480 - x + start + postCharacterSpace(font, *(str-1))) / 2);
   }
   return x - start - postCharacterSpace(font, *(str-1));
 }
@@ -110,7 +110,7 @@ uint16_t displayCharacter(uint8_t font, uint16_t x, uint16_t y, uint8_t c)
 
   // Make sure the character can be printed
   if (!isSupportedCharacter(font, c)) {
-    SerialUSB.println("displayCharacter: Not supported");
+    //SerialUSB.println("displayCharacter: Not supported");
     return 0;
   }
     
@@ -327,8 +327,8 @@ void displayFixedWidthString(uint16_t x, uint16_t y, char *str, uint8_t maxChars
 
   // Sanity check
   if (numberOfCharacters > maxChars) {
-    SerialUSB.print("displayFixedWidthString: too many characters in string ");
-    SerialUSB.println(str);
+    //SerialUSB.print("displayFixedWidthString: too many characters in string ");
+    //SerialUSB.println(str);
     return;
   }
   // What is the width of each character?
