@@ -105,7 +105,11 @@
 #define HELP_LEARNING_NOT_DONE         81
 
 // Outputs
+#if defined(TEENSYDUINO)
+#define NUMBER_OF_OUTPUTS              3
+#else
 #define NUMBER_OF_OUTPUTS              6
+#endif
 // Types of outputs
 #define TYPE_UNUSED                    0
 #define TYPE_WHOLE_OVEN                0  // Used to store whole oven values (learned mode)

@@ -8,26 +8,38 @@
 //  - Control n-channel MOSFETs, which switch 4.5V (5V less schottky diode)
 //  - MOSFET's can handle currents up to 240mA
 //  - Protected by 240 Ohm resistors, so current is limited to 19mA per output
-//  - Output 1 = PA15 (Arduino = D5)
-//  - Output 2 = PB30 (Arduino = not available)
-//  - Output 3 = PB17 (Arduino = not available)
-//  - Output 4 = PB09 (Arduino = A2)
-//  - Output 5 = PB08 (Arduino = A1)
+//  - Output 1 = PA15 (Arduino = D5) (TeensyLC Pin 2)
+//  - Output 2 = PB30 (Arduino = not available) (TeensyLC Pin 3)
+//  - Output 3 = PB17 (Arduino = not available) (TeensyLC Pin 4)
+//  - Output 4 = PB09 (Arduino = A2) (not available on TeensyLC)
+//  - Output 5 = PB08 (Arduino = A1) (not available on TeensyLC)
 // Output 6
 //  - Is just a bare pin broken out to the middle of the PCB
 //  - 3.3V because it is a microcontroller pin
 //  - No input protection and no MOSFET
 //  - Can be used as a digital input, if necessary using pinMode(SCK, INPUT) and digitalRead(SCK)
-//  - Output 6 = PB11 (Arduino = SCK)
+//  - Output 6 = PB11 (Arduino = SCK) (not available on TeensyLC)
 //
 //  On the board (and in the build guide) the outputs are 1 through 6. In software they are 0 through 5.
 
 
-volatile uint32_t *portAOut, *portAMode, *portBOut, *portBMode;
 static boolean outputState[NUMBER_OF_OUTPUTS];
+
+#if defined(TEENSYDUINO)
+#define OUTPUT_1 2
+#define OUTPUT_2 3
+#define OUTPUT_3 4
+#else
+volatile uint32_t *portAOut, *portAMode, *portBOut, *portBMode;
+#endif
 
 // Initialize the registers controlling the outputs, and turn them off
 void initOutputs() {
+#if defined(TEENSYDUINO)
+  pinMode(OUTPUT_1, OUTPUT);
+  pinMode(OUTPUT_2, OUTPUT);
+  pinMode(OUTPUT_3, OUTPUT);
+#else
   // Get pointer to the registers
   portAOut   = portOutputRegister(digitalPinToPort(5));
   portAMode  = portModeRegister(digitalPinToPort(5));
@@ -37,6 +49,7 @@ void initOutputs() {
   // Set all I/O modes to outputs
   *portAMode |= SETBIT15;
   *portBMode |= (SETBIT08 + SETBIT09 + SETBIT11 + SETBIT17 + SETBIT30);
+#endif
 
   // Set all outputs low (turn off relays)
   for (int i=0; i<=NUMBER_OF_OUTPUTS; i++)
@@ -55,6 +68,19 @@ void setOutput(uint8_t outputNumber, boolean state) {
   // Save the new state
   outputState[outputNumber] = state;
   
+#if defined(TEENSYDUINO)
+  switch(outputNumber) {
+  case 0:
+    digitalWrite(OUTPUT_1, state);
+    break;
+  case 1:
+    digitalWrite(OUTPUT_2, state);
+    break;
+  case 2:
+    digitalWrite(OUTPUT_3, state);
+    break;
+  }
+#else
   switch (outputNumber) {
     case 0: 
       if (state == LOW)
@@ -98,6 +124,7 @@ void setOutput(uint8_t outputNumber, boolean state) {
         *portBOut |= SETBIT11; 
       break;
   }
+#endif
 }
 
 
@@ -181,4 +208,3 @@ uint8_t numOutputsConfigured()
   }
   return numberConfigured;
 }
-
