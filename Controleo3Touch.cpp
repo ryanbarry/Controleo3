@@ -13,9 +13,11 @@
 #define TOUCH_DEBUG
 
 #include "Controleo3Touch.h"
+#include "Controleo3.h"
 
 Controleo3Touch::Controleo3Touch()
 {
+#if !defined(TEENSYDUINO)
     // Get the addresses of Port A (D2 is on port A)
     portAOut   = portOutputRegister(digitalPinToPort(2));
     portAIn    = portInputRegister(digitalPinToPort(2));
@@ -25,11 +27,21 @@ Controleo3Touch::Controleo3Touch()
     portBOut   = portOutputRegister(digitalPinToPort(A2));
     portBIn    = portInputRegister(digitalPinToPort(A2));
     portBMode  = portModeRegister(digitalPinToPort(A2));
+#endif
 }
 
 
 void Controleo3Touch::begin()
 {
+#if defined(TEENSYDUINO)
+     pinMode(13, OUTPUT); // SCK0
+     pinMode(10, OUTPUT); // CS0
+     pinMode(11, OUTPUT); // MOSI0
+
+     pinMode(12, INPUT); // MISO0
+     digitalWrite(12, LOW);
+     pinMode(15, INPUT); // PEN_IRQ
+#else
     // Set some pins as outputs (CLK, CS, MOSI)
     *portAMode |= (SETBIT08 + SETBIT09 + SETBIT10);
 
@@ -37,7 +49,7 @@ void Controleo3Touch::begin()
     *portAMode &= CLEARBIT11;	// MISO
     *portAOut  &= CLEARBIT11;	// MISO
     pinMode(23, INPUT);			// PEN_IRQ
-
+#endif
     // Initialize pins states
     TOUCH_CLK_ACTIVE;
     TOUCH_CS_ACTIVE;
@@ -175,9 +187,9 @@ void Controleo3Touch::write8(byte data)
 	for (byte count=0; count<8; count++)
 	{
 		if (data & 0x80)
-			TOUCH_MOSI_ACTIVE;
+			TOUCH_MOSI_ACTIVE
 		else
-			TOUCH_MOSI_IDLE;
+			TOUCH_MOSI_IDLE
 		data = data << 1;
 		TOUCH_PULSE_CLK;
 	}
@@ -185,9 +197,9 @@ void Controleo3Touch::write8(byte data)
 
 
 // Read the touch value
-uint16_t Controleo3Touch::read12()
+word Controleo3Touch::read12()
 {
-	uint16_t data = 0;
+	word data = 0;
 
 	for (byte count=0; count<12; count++)
 	{

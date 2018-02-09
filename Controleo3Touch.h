@@ -11,8 +11,25 @@
 #include "Arduino.h"
 #include "bits.h"
 
+#if defined(TEENSYDUINO)
+// SCK0 is 13
+#define TOUCH_CLK_ACTIVE        digitalWrite(13, HIGH);
+#define TOUCH_CLK_IDLE		    digitalWrite(13, LOW);
 
+// TOUCH_CS is 10
+#define TOUCH_CS_ACTIVE         digitalWrite(10, HIGH);
+#define TOUCH_CS_IDLE		    digitalWrite(10, LOW);
 
+// MOSI0 is 11
+#define TOUCH_MOSI_ACTIVE       digitalWrite(11, HIGH);
+#define TOUCH_MOSI_IDLE         digitalWrite(11, LOW);
+
+// MISO0 is 12
+#define TOUCH_MISO_HIGH  		(digitalRead(12) == 1)
+
+// PEN_IRQ is on 15
+#define TOUCH_PEN_IRQ           (digitalRead(15) == 0)
+#else
 // CLK is D4 (PA8)
 #define TOUCH_CLK_ACTIVE        (*portAOut |= SETBIT08)
 #define TOUCH_CLK_IDLE		    (*portAOut &= CLEARBIT08)
@@ -30,9 +47,9 @@
 
 // PEN_IRQ is on PB10
 #define TOUCH_PEN_IRQ           ((*portBIn & SETBIT10) == 0)
+#endif
 
 #define TOUCH_PULSE_CLK         { TOUCH_CLK_IDLE; TOUCH_CLK_ACTIVE; }
-
 
 class Controleo3Touch
 {
