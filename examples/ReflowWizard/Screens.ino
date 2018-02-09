@@ -417,28 +417,13 @@ redraw:
         drawNavigationButtons(true, true);
 
         while (1) {
-          // Show the degrees
-          sprintf(buffer100Bytes, "%d~", prefs.servoOpenDegrees);
-          displayFixedWidthString(255, LINE(0), buffer100Bytes, 4, FONT_9PT_BLACK_ON_WHITE_FIXED);
-          setServoPosition(prefs.servoOpenDegrees, 1000);
-
           // Act on the tap
           switch(getTap(SHOW_TEMPERATURE_IN_HEADER)) {
             case 0: 
-              if (prefs.servoOpenDegrees > 0) {
-                prefs.servoOpenDegrees -= 5;
-                savePrefs();
-              }
-              else
-                playTones(TUNE_INVALID_PRESS);
+              playTones(TUNE_INVALID_PRESS);
               break;
             case 1: 
-              if (prefs.servoOpenDegrees < 180) {
-                prefs.servoOpenDegrees += 5;
-                savePrefs();
-              }
-              else
-                playTones(TUNE_INVALID_PRESS);
+              playTones(TUNE_INVALID_PRESS);
               break;
               
             case 2: screen = SCREEN_SETUP_OUTPUTS; break;
@@ -462,27 +447,13 @@ redraw:
 
         while (1) {
           // Show the degrees
-          sprintf(buffer100Bytes, "%d~", prefs.servoClosedDegrees);
-          displayFixedWidthString(265, LINE(0), buffer100Bytes, 4, FONT_9PT_BLACK_ON_WHITE_FIXED);
-          setServoPosition(prefs.servoClosedDegrees, 1000);
-
           // Act on the tap
           switch(getTap(SHOW_TEMPERATURE_IN_HEADER)) {
             case 0: 
-              if (prefs.servoClosedDegrees > 0) {
-                prefs.servoClosedDegrees -= 5;
-                savePrefs();
-              }
-              else
-                playTones(TUNE_INVALID_PRESS);
+              playTones(TUNE_INVALID_PRESS);
               break;
             case 1: 
-              if (prefs.servoClosedDegrees < 180) {
-                prefs.servoClosedDegrees += 5;
-                savePrefs();
-              }
-              else
-                playTones(TUNE_INVALID_PRESS);
+              playTones(TUNE_INVALID_PRESS);
               break;
               
             case 2: screen = SCREEN_SERVO_OPEN; 
@@ -553,7 +524,11 @@ redraw:
               drawTouchButton(260, 230, 160, 105, BUTTON_LARGE_FONT, (char *) "Cancel");
               if (getTap(SHOW_TEMPERATURE_IN_HEADER) == 0) {
                 factoryReset(true);
+#if defined(TEENSYDUINO)
+                TeensySoftReset();
+#else
                 NVIC_SystemReset();
+#endif
               }
               break;
           case 1: CalibrateTouchscreen(); break;
@@ -579,9 +554,11 @@ redraw:
         //displayString(10, 130, FONT_9PT_BLACK_ON_WHITE, (char *) "Flash ID:");
         //sprintf(buffer100Bytes, "%lX", flash.readUniqueID());
         //displayString(118, 130, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);
+#if !defined(TEENSYDUINO)
         displayString(10, 160, FONT_9PT_BLACK_ON_WHITE, (char *) "LCD Version:");
         sprintf(buffer100Bytes, "%lX", tft.getLCDVersion());
         displayString(169, 160, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);
+#endif
         displayString(10, 190, FONT_9PT_BLACK_ON_WHITE, (char *) "Free RAM:");
         sprintf(buffer100Bytes, "%ld bytes (%ld%% free)", getFreeRAM(), getFreeRAM() / 320); // Has 32KB RAM
         displayString(146, 190, FONT_9PT_BLACK_ON_WHITE, buffer100Bytes);

@@ -173,9 +173,6 @@ userChangedMindAboutAborting:
 
     // Was the maximum temperature exceeded?
     if (currentTemperature > maxTemperature) {
-      // Open the oven door to cool things off
-      setServoPosition(prefs.servoOpenDegrees, 3000);
-
       // Abort the reflow
       SerialUSB.println("Reflow aborted because of maximum temperature exceeded!");
       sprintf(buffer100Bytes, "Maximum temperature of %d~C", maxTemperature);
@@ -264,20 +261,17 @@ userChangedMindAboutAborting:
           case TOKEN_OVEN_DOOR_OPEN:
             // Open the oven door over X seconds
             numbers[0] = numbers[0] < 30? numbers[0]: 30;
-            setServoPosition(prefs.servoOpenDegrees, numbers[0] * 1000);
             break;
             
           case TOKEN_OVEN_DOOR_CLOSE:
             // Close the oven door over X seconds
             numbers[0] = numbers[0] < 30? numbers[0]: 30;
-            setServoPosition(prefs.servoClosedDegrees, numbers[0] * 1000);
             break;
 
           case TOKEN_OVEN_DOOR_PERCENT:
             // Open the oven door a certain percentage
             numbers[0] = numbers[0] < 100? numbers[0]: 100;
             numbers[1] = numbers[1] < 30? numbers[1]: 30;
-            setServoPosition(map(numbers[0], 0, 100, prefs.servoClosedDegrees, prefs.servoOpenDegrees), numbers[1] * 1000);
             break;
 
           case TOKEN_WAIT_FOR_SECONDS:
@@ -511,8 +505,6 @@ userChangedMindAboutAborting:
       
         // Abort if deviated too far from the required temperature
         if (reflowPhase != REFLOW_MAINTAIN_TEMP && abs(pidTemperature - currentTemperature) > maxTemperatureDeviation) {
-          // Open the oven door
-          setServoPosition(prefs.servoOpenDegrees, 3000);
           SerialUSB.println("ERROR: temperature delta exceeds maximum allowed!");
           sprintf(buffer100Bytes, "Maximum deviation of %d~C was", maxTemperatureDeviation);
           showReflowError(iconsX, buffer100Bytes, (char *) "exceeded");
@@ -584,8 +576,6 @@ userChangedMindAboutAborting:
       case REFLOW_ABORT:
         // User either tapped "Done" at the end of the reflow, or the user tapped abort
         setOvenOutputs(ELEMENTS_OFF, CONVECTION_FAN_OFF, COOLING_FAN_OFF);
-        // Close the oven door
-        setServoPosition(prefs.servoClosedDegrees, 1000);
         // All done!
         return;
     }

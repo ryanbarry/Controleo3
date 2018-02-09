@@ -12,8 +12,6 @@
 // to keep some of the most used bitmaps there.
 uint16_t renderBitmap(uint16_t bitmapNumber, uint16_t x, uint16_t y) {
   // Render from microcontroller flash, if the bitmap exists there
-  if (flashBitmaps[bitmapNumber])
-    return renderBitmapFromMicrocontrollerFlash(bitmapNumber, x, y);
   return renderBitmapFromExternalFlash(bitmapNumber, x, y);
 }
 
@@ -22,6 +20,9 @@ uint16_t renderBitmap(uint16_t bitmapNumber, uint16_t x, uint16_t y) {
 // Returns the width of the rendered bitmap (needed when writing text)
 uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16_t y)
 {
+#if defined(TEENSYDUINO)
+  return uint16_t(0);
+#else
     uint16_t bitmapHeight, bitmapWidth, pageWhereBitmapIsStored, pixelsInPage;
     uint32_t bitmapPixels;
     uint16_t buf[128];    // 256 bytes
@@ -71,35 +72,8 @@ uint16_t renderBitmapFromExternalFlash(uint16_t bitmapNumber, uint16_t x, uint16
     //TODO: not flash
     //flash.endRead();
     return bitmapWidth;
+#endif
 }
-
-
-// Render a bitmap from microcontroller flash
-// Returns the width of the rendered bitmap (needed when writing text)
-// The first 2 bytes of the bitmap is the width and height of the bitmap
-uint16_t renderBitmapFromMicrocontrollerFlash(uint16_t bitmapNumber, uint16_t x, uint16_t y)
-{
-    uint16_t bitmapHeight, bitmapWidth;
-    uint32_t bitmapPixels;
-    char *fontBitmap;
-    
-    // Get a pointer to the bitmap from the bitmap table
-    fontBitmap = (char *) flashBitmaps[bitmapNumber];
-
-    // The bitmap width and height are the first 2 bytes
-    bitmapHeight = *(fontBitmap++);
-    bitmapWidth = *(fontBitmap++);
-    bitmapPixels = bitmapWidth * bitmapHeight;
-    if (0 && bitmapNumber >= FONT_IMAGES && bitmapNumber < BITMAP_CONVECTION_FAN1 && bitmapNumber > BITMAP_COOLING_FAN3)
-      SerialUSB.println("N=" + String(bitmapNumber) + " H=" + String(bitmapHeight) + " W=" + String(bitmapWidth) + " Center=" + String((480 - bitmapWidth) >> 1));
-
-    // Start rendering the bitmap
-    tft.startBitmap(x, y, bitmapWidth, bitmapHeight);
-    tft.drawBitmap((uint16_t *) fontBitmap, bitmapPixels);
-    tft.endBitmap();
-    return bitmapWidth;
-}
-
 
 // Display a string on the screen, using the specified font
 // Only ASCII-printable character are supported

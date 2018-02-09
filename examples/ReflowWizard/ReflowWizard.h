@@ -261,8 +261,6 @@ struct Controleo3Prefs {
   uint16_t  bottomRightY;
   uint8_t   outputType[NUMBER_OF_OUTPUTS];    // The type of output for each of the 6 outputs 
   uint8_t   lineVoltageFrequency;             // Used for MAX31856 filtering
-  uint8_t   servoOpenDegrees;                 // Servo door open 
-  uint8_t   servoClosedDegrees;               // Servo door closed
   uint8_t   learningComplete;                 // Have the learning runs been completed?
   uint8_t   learnedPower[4];                  // The power of the individual elements and the total power
   uint16_t  learnedInertia[4];                // The thermal inertia of individual elements and the total intertia

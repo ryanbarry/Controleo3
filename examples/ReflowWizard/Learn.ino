@@ -486,9 +486,6 @@ userChangedMindAboutAborting:
         // Move to the next phase
         learningPhase = LEARNING_PHASE_COOLING;
 
-        // If a servo is attached, use it to open the door over 10 seconds
-        setServoPosition(prefs.servoOpenDegrees, 10000);
-
         // Change the STOP button to DONE
         tft.fillRect(150, 242, 180, 36, WHITE);
         drawButton(110, 230, 260, 93, BUTTON_LARGE_FONT, (char *) "DONE");
@@ -509,8 +506,6 @@ userChangedMindAboutAborting:
           isHeating = false;
           // Turn all elements and fans off
           setOvenOutputs(ELEMENTS_OFF, CONVECTION_FAN_OFF, COOLING_FAN_OFF);
-          // Close the oven door now, over 3 seconds
-          setServoPosition(prefs.servoClosedDegrees, 3000);
           // Stay on this screen and wait for the user tap
           learningPhase = LEARNING_PHASE_DONE;
           // Play a tune to let the user know baking is done
@@ -526,8 +521,6 @@ userChangedMindAboutAborting:
         SerialUSB.println("Learning is over!");
         // Turn all elements and fans off
         setOvenOutputs(ELEMENTS_OFF, CONVECTION_FAN_OFF, COOLING_FAN_OFF);
-        // Close the oven door now, over 3 seconds
-        setServoPosition(prefs.servoClosedDegrees, 3000);
         // Return to the main menu
         return;
     }

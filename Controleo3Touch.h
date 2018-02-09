@@ -10,12 +10,7 @@
 
 #include "Arduino.h"
 #include "bits.h"
-#include "ILI9488.h"
 
-#define LCD_WIDTH  		480
-#define LCD_HEIGHT 		320
-#define LCD_MAX_X		479
-#define LCD_MAX_Y		319
 
 
 // CLK is D4 (PA8)

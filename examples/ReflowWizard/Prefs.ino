@@ -26,7 +26,6 @@ void getPrefs()
   }
   
   // Get the prefs with the highest sequence number
-  uint32_t highestSequenceNumber = 0, seqNo;
   uint8_t prefsToUse = 0;
 
   // If this is the first time the prefs are read in, initialize them
@@ -37,9 +36,6 @@ void getPrefs()
       *p++ = 0;
 
     // Only need to initialize non-zero prefs here
-    // Door servo positions
-    prefs.servoOpenDegrees = 90;
-    prefs.servoClosedDegrees = 90;
     prefs.bakeTemperature = BAKE_MIN_TEMPERATURE;
     prefs.bakeDuration = 31;  // 1 hour
     prefs.openDoorAfterBake = BAKE_DOOR_OPEN_CLOSE_COOL;

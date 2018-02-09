@@ -11,10 +11,21 @@
 char buffer100Bytes[100];
 //uint8_t flashBuffer256Bytes[256];     // Read/write from flash.  This is the size of a flash block
 
-Controleo3LCD tft;
 Controleo3Touch  touch;
 Controleo3MAX31856 thermocouple;
 
+#if defined(TEENSYDUINO)
+#include "Adafruit_ILI9341.h"
+// https://forum.pjrc.com/threads/24304-_reboot_Teensyduino%28%29-vs-_restart_Teensyduino%28%29?p=45253#post45253
+#define RESTART_ADDR       0xE000ED0C
+#define READ_RESTART()     (*(volatile uint32_t *)RESTART_ADDR)
+#define WRITE_RESTART(val) ((*(volatile uint32_t *)RESTART_ADDR) = (val))
+#define TeensySoftReset() {WRITE_RESTART(0x5FA0004);}
+//                                      CS  DC  MOSI SCLK RST MISO
+Adafruit_ILI9341 tft = Adafruit_ILI9341(10,  9,   11,  13, -1,  12);
+#else
+Controleo3LCD tft;
+#endif
 
 void setup(void) {
   // First priority - turn off the relays!
@@ -27,13 +38,17 @@ void setup(void) {
   tft.begin();
 
   // Display the initial splash screen
+#if !defined(TEENSYDUINO)
   tft.pokeRegister(ILI9488_DISPLAYOFF);
+#endif
   tft.fillScreen(WHITE);
   renderBitmap(BITMAP_CONTROLEO3, 40, 10);
   renderBitmap(BITMAP_WHIZOO, 84, 200);
   displayString(42, 85, FONT_12PT_BLACK_ON_WHITE, (char *) "Reflow Oven Controller");
   displayString(420, 290, FONT_9PT_BLACK_ON_WHITE, (char *) CONTROLEO3_VERSION);
+#if !defined(TEENSYDUINO)
   tft.pokeRegister(ILI9488_DISPLAYON);
+#endif
   playTones(TUNE_STARTUP);
   SerialUSB.begin(115200);
 
@@ -44,15 +59,9 @@ void setup(void) {
   thermocouple.begin();
   initTemperature();
 
-  // Initialize the timer used to control the servo and read the temperature
-  initializeTimer();
-
   // Start the touchscreen
   touch.begin();
   
-  // Move the servo to the closed position
-  setServoPosition(prefs.servoClosedDegrees, 1000); 
-
   // Is there touchscreen calibration data?
   if (prefs.topLeftX != 0) {
     sendTouchCalibrationData();

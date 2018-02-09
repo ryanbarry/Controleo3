@@ -15,13 +15,25 @@
 
 // Include all the code for the display, touch, and thermocouple
 #include "Controleo3MAX31856.h"
-#include "Controleo3LCD.h"
 #include "Controleo3Touch.h"
 
+#if defined(TEENSYDUINO)
+#define WHITE ILI9341_WHITE
+#define RED ILI9341_RED
+#define BLACK ILI9341_BLACK
+#define BLUE ILI9341_BLUE
+#define LIGHT_GREY 0xC618
+
+#define LCD_WIDTH  		320
+#define LCD_HEIGHT 		240
+#define LCD_MAX_X		319
+#define LCD_MAX_Y		239
+#else
 #define LCD_WIDTH  		480
 #define LCD_HEIGHT 		320
 #define LCD_MAX_X		479
 #define LCD_MAX_Y		319
+#endif
 
 #define BUZZER_PIN              MISO
 
