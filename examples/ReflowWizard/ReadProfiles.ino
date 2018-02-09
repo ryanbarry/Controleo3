@@ -14,42 +14,6 @@ char *tokenString[NUM_TOKENS] = {(char *) "not_a_token", (char *) "name", (char 
                                  (char *) "door percentage", (char *) "maintain"};
 char *tokenPtr[NUM_TOKENS];
 
-// Scan the SD card, looking for profiles
-void ReadProfilesFromSDCard()
-{
-  // Don't do anything if there isn't a SD card
-  if (digitalRead(A0) == HIGH)
-    return;
-  SerialUSB.println("SD card is present");
-
-  // Initialize the SD card
-  SerialUSB.println("Initializing SD card...");
-  // Try initializing twice.  Necessary if good card follows bad one
-  if (!SD.begin() && !SD.begin()) {
-    SerialUSB.println((char *) "Card failed, or not present");
-    SerialUSB.println((char *) "Error! Is SD card FAT16 or FAT32?");
-    tft.fillRect(20, 120, 440, 40, WHITE);
-    displayString(24, 120, FONT_9PT_BLACK_ON_WHITE, (char *) "Error! Is SD card FAT16 or FAT32?");
-    uint32_t start = millis();
-    // Display the message for 3 seconds, or until the SD card is removed
-    while (digitalRead(A0) == LOW && millis() - start < 3000)
-      delay(20);
-    tft.fillRect(20, 120, 440, 40, WHITE);
-    // Don't do anything more
-    return;
-  }
-  SerialUSB.println("SD Card initialized");
-
-  // Open the root folder to look for files
-  File root = SD.open("/");
-
-  processDirectory(root);
-
-  // Profiles are written to flash as part of the factory setup.  Write these immediately
-  if (prefs.sequenceNumber < 10)
-    writePrefsToFlash();
-}
-
 
 // Look for profile files in this directory
 void processDirectory(File dir)

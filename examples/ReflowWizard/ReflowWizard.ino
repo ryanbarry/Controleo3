@@ -11,10 +11,6 @@
 char buffer100Bytes[100];
 uint8_t flashBuffer256Bytes[256];     // Read/write from flash.  This is the size of a flash block
 
-Sd2Card card;
-SdVolume volume;
-SdFile root;
-
 Controleo3LCD tft;
 Controleo3Touch  touch;
 Controleo3Flash  flash;
@@ -25,31 +21,13 @@ void setup(void) {
   // First priority - turn off the relays!
   initOutputs();
 
-  // See if there is a SD card present
-  pinMode(SD_DETECT_PIN, INPUT_PULLUP);
-  if (digitalRead(SD_DETECT_PIN) == LOW) {
-    // There is a SD card
-    SD.begin();
-
-    // Should the controller wait for new firmware to be loaded?  This is only
-    // necessary if the existing firmware is really f%#*ed up
-    if (SD.exists((char *) "iamafool.txt")) {
-      // Wait here forever, until new firmware is loaded
-      while (true)
-        delay(1000);
-    }
-
-    // Should the controller be reset to factory settings?
-    if (SD.exists((char *) "factory3.txt")) {
-      flash.begin();
-      getPrefs();
-      factoryReset(false);
-    }
-  }
+  flash.begin();
+  getPrefs();
+  factoryReset(false);
 
   // Get the splash screen up as quickly as possible
   tft.begin();
-  flash.begin();
+  //flash.begin();
 
   // Display the initial splash screen
   tft.pokeRegister(ILI9488_DISPLAYOFF);
@@ -101,64 +79,6 @@ void loop()
 {
   // This should never be called (showScreen never exits)
   showScreen(SCREEN_HOME);
-}
-
-
-// Fixed BMP file header for screenshots
-const char bmpHeader[54] PROGMEM = {
-  0x42, 0x4d, 0x36, 0x8, 0x7, 0x0, 0x0, 0x0, 0x0, 0x0,
-  0x36, 0x0, 0x0, 0x0, 0x28, 0x0, 0x0, 0x0, 0xe0, 0x1,
-  0x0, 0x0, 0xC0, 0xFE, 0xFF, 0xFF, 0x1, 0x0, 0x18, 0x0,
-  0x0, 0x0, 0x0, 0x0, 0x0, 0x8, 0x7, 0x0, 0x13, 0xb,
-  0x0, 0x0, 0x13, 0xb, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
-  0x0, 0x0, 0x0, 0x0
-};
-
-
-// Take a screenshot.  This is a "blocking" call - so nothing else gets processed
-// while this is happening
-void takeScreenshot() 
-{
-  char buf[320 * 3];
-  // Initialize the SD card
-  if (!SD.begin()) {
-    SerialUSB.println("Card failed, or not present");
-    return;
-  }
-  
-  // Open the file for writing
-  sprintf(buf, "C3_%05d.bmp", prefs.screenshotNumber);
-  File dataFile = SD.open(buf, FILE_WRITE);
-  if (!dataFile) {
-    SerialUSB.println("Can't open " + String(buf));
-    return;
-  }
-  SerialUSB.println("Writing screenshot to " + String(buf));
-  
-  // Write the bitmap header
-  memcpy_P(buf, bmpHeader, 54);
-  dataFile.seek(0);
-  dataFile.write(buf, 54);
-
-  // Start the screen read
-  tft.startReadBitmap(0, 0, 480, 320);
-
-  // Keeping reading from the screen and writing to the SD card
-  for (uint16_t i=0; i< 480; i++) {
-    tft.readBitmap24bit((uint8_t *) buf, 320);
-    dataFile.write(buf, 320 * 3);
-    // Beep every 1/12 of the operation to let the user know something is happening
-    if (i % 40 == 0)
-      playTones(TUNE_SCREENSHOT_BUSY);
-  }
-  tft.endReadBitmap();
-  dataFile.close();
-
-  // Increase the file number for the next screenshot
-  prefs.screenshotNumber = (prefs.screenshotNumber + 1) % 10000;
-  savePrefs();
-  playTones(TUNE_SCREENSHOT_DONE);
-  SerialUSB.println("Screenshot written!");
 }
 
 

@@ -393,7 +393,7 @@ int8_t getTap(uint8_t mode)
       touchScreenshotTaps++;
       if (touchScreenshotTaps % 3 == 0) {
         // Take a screenshot now
-        takeScreenshot();
+        //TODO: print a note about removed functionality (maybe? or maybe just remove all of this?)
       }
       debounce();
     }

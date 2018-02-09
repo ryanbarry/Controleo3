@@ -263,7 +263,6 @@ redraw:
             case 3: 
               tft.fillRect(40, 105, 400, 61, WHITE);
               displayString(128, 120, FONT_9PT_BLACK_ON_WHITE, (char *) "Reading SD card ...");
-              ReadProfilesFromSDCard(); 
               tft.fillRect(40, 105, 400, 61, WHITE);
               prefs.selectedProfile = 0;
               goto redraw;
